@@ -1,0 +1,21 @@
+/* rem or em*/
+@import '../../../../node_modules/normalize.css/normalize.css';
+html{
+  font-size: 62.5%;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;  
+  font-size: 1.6rem;
+  color: black;
+}
+.pageHeader{
+  z-index: 10000000000000;
+  position: fixed;
+  width: 100%;
+  padding: 2px;
+  top: 0;
+}
+.pageBody{
+  width: 100%;
+  overflow: hidden !important;
+}

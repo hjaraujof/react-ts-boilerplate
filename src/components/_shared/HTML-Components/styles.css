@@ -1,0 +1,22 @@
+.pageHeader{
+  z-index: 10000000000000;
+  position: fixed;
+  width: 100%;
+  padding: 2px;
+  top: 0;
+}
+.pageBody{
+  width: 100%;
+  overflow: hidden !important;
+}
+.navBarContainer{
+  width:80%;
+  margin: 0 auto;
+}
+.sectionContainer{
+  padding: 1rem;
+  overflow: hidden;
+}
+.sectionContainer > section{
+  padding: 2rem;
+}

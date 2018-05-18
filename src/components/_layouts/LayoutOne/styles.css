@@ -1,0 +1,17 @@
+@import '../../_styles/base/base.css';
+.navBarContainer{
+  width:80%;
+  margin: 0 auto;
+}
+.sectionContainer{
+  padding: 1rem;
+  overflow: hidden;
+}
+.sectionContainer > section{
+  padding: 2rem;
+}
+.navBarOffset{
+  position: relative;
+  margin-top: 3.5rem;
+  padding-top: 3.5rem;
+}

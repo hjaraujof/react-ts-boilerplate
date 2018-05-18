@@ -1,0 +1,107 @@
+<div class="container">
+	<a href="#" class="scroll-down">
+		<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+		 <path d="m0 93.301l49.996-86.602 50.004 86.602z"/>
+		</svg>
+	</a>
+</div>
+
+$animation-time: 300ms;
+$button-size: 4rem;
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+.container {
+	background-color: #dedede;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.scroll-down {
+	position: relative;
+	background-color: red;
+	width: $button-size;
+	height: $button-size;
+	padding: 1.618rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 0;
+	
+	&::before {
+		content: '';
+		position: absolute;
+		z-index: 1;
+		top: 50%;
+		left: 50%;
+		transform-origin: 50% 50%;
+		transform: translate(-50%, -50%) scale(0);
+		width: 105%;
+		height: 105%;
+		background-color: white;
+		border-radius: 50%;
+		will-change: transform;
+		transition: transform $animation-time;
+	}
+	
+	&::after {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		top: 50%;
+		left: 50%;
+		transform-origin: 50% 50%;
+		transform: translate(-50%, -50%) scale(1);
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		background-color: red;
+		border-radius: 50%;
+		will-change: transform;
+		transition: transform $animation-time;
+	}
+	
+	svg {
+		max-width: 25.888px;
+		width: 100%;
+		height: auto;
+		position: relative;
+		z-index: 2;
+		fill: white;
+		transition: fill $animation-time;
+		transform: rotate(180deg);
+	}
+	
+	&:hover {
+		
+		&::before {
+			transform: translate(-50%, -50%) scale(1);
+		}
+		
+		&::after {
+			transform: translate(-50%, -50%) scale(1.2);
+			animation: fade $animation-time;
+		}
+		
+		svg {
+			fill: red;
+		}
+		
+	}
+	
+}
+
+@keyframes fade {
+	
+	50% {
+		opacity: 0.25;
+	}
+	
+}

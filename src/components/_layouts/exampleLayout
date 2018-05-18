@@ -1,0 +1,92 @@
+import * as React from 'react';
+
+export interface ILayoutProps{
+	Component: React.ComponentClass
+}
+
+export const PublicLayout: React.SFC<ILayoutProps> = (props) => {
+	const Component = props.Component;
+	
+	return (
+		<div>
+				<h1>Example Page Layout</h1>
+				<Component/>
+		</div>
+	);
+}
+
+/*
+render() {
+  if (!this.props.user.verified) { return(<div>Loading...</div>); }
+  return (
+    <BrowserRouter>
+      <Switch>
+        
+        
+        
+        { _.map(publicRoutes, (route, key) => {
+          const { component, path } = route;
+          return (
+            <Route
+              exact
+              path={path}
+              key={key}
+              render={ (route) => 
+                 <PublicLayout 
+                   component={component}
+                   route={route} 
+                 /> 
+              }
+            />
+          )
+        })}
+        
+        { _.map(privateRoutes, (route, key) => {
+          const { component, path } = route;
+          return (
+            <Route
+              exact
+              path={path}
+              key={key}
+              render={ () => 
+                this.props.user.logged ? (
+                  <PrivateLayout 
+                      component={component}  
+                      route={route}
+                  />
+                ) : (
+                  <PublicLayout 
+                      component={LoginForm} 
+                      route={route}
+                  />
+                )
+              }
+            />
+          )
+        })}
+        { _.map(sessionRoutes, (route, key) => {
+          const { component, path } = route;
+          return (
+            <Route
+              exact
+              path={path}
+              key={key}
+              render={ () => 
+                this.props.user.logged ? (
+                  <Redirect to="/profile"/>
+                ) : (
+                  <PublicLayout 
+                      component={component} 
+                      route={route}
+                  />
+                )
+              }
+            />
+          )
+        })}
+        <Route component={ NotFound } />
+      </Switch>
+    </BrowserRouter>
+  );
+}
+*/

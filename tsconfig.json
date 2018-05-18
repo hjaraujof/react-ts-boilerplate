@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "src/",
     "outDir": "build/dist",
     "module": "esnext",
@@ -17,7 +18,7 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "skipLibCheck": true
+	  "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
@@ -27,5 +28,9 @@
     "webpack",
     "jest",
     "src/setupTests.ts"
+  ],
+  "include": [
+    "typings/*",
+    "src/**/*"
   ]
 }
