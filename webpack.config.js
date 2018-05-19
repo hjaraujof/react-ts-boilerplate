@@ -1,9 +1,11 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const package = require('./package.json');
 const path = require('path');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
 const webpack = require('webpack');
 
@@ -11,10 +13,9 @@ const excludeVendors = ['react-scripts-ts','normalize.css'];
 const vendors = Object.keys(package.dependencies).filter( d => !excludeVendors.includes(d) );
 
 const PATHS = {
-  public: path.join( __dirname, "public" ),
-  publicStatic: path.join( __dirname, "public/static" ),
+  build: path.join( __dirname, "build" ),
   src: path.join( __dirname, "src" ),
-  static: path.join( __dirname, "assets/static" ),
+  srcStatic: path.join( __dirname, "assets/static" ),
   indexJs : path.join( path.join( __dirname, "src" ), "index.tsx" ),
   indexHtml : path.join( path.join( __dirname, "src" ), "index.html" )
 };
@@ -22,42 +23,53 @@ const PORTS = { dev: 3000 };
 
 module.exports = {
   context: __dirname,
-  mode: "development",
+  mode: process.env.NODE_ENV,
   devServer: {
     compress: true,
-    contentBase: PATHS.public,
-    // hot: true,
+    contentBase: PATHS.build,
     port: PORTS.dev,
     overlay: { warnings: true, errors: true }
   },
-  watch: true,
   entry:{ main: PATHS.indexJs, vendor: vendors },
   output: {
     filename: "[name].[chunkhash].js",
 		chunkFilename: "[name].[chunkhash].js",
-    path: PATHS.public
+    path: PATHS.build
   },
   optimization: {
     minimize: true,
     noEmitOnErrors: true,
     runtimeChunk: 'single',
     splitChunks: {
-        cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
-              enforce: true,
-              chunks: 'all'
-            }
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          enforce: true,
+          chunks: 'all'
         }
+      }
     }
   },
   devtool: "source-map",
-  resolve:{ "extensions": [ '.ts', '.tsx', '.js', '.json' ] },
+  resolve: { "extensions": [ '.ts', '.tsx', '.js', '.json' ] },
   module:{
     rules:[
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader", exclude: /node_modules/ },
+      { 
+        test: /\.tsx?$/, 
+        loader: "awesome-typescript-loader", 
+        include: PATHS.src,
+        options:{
+          useCache: true,
+          errorsAsWarnings: true,
+          forceIsolatedModules: true,
+          reportFiles: [
+            "src/**/*.{ts,tsx}",
+          ]
+        } 
+      },
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+      { enforce: 'pre', test: /\.(jpe?g|png|gif|svg)$/, loader: 'image-webpack-loader'},
       { test: /.html$/, use: 'raw-loader' },
       { test: /\.json$/, use: 'json-loader' },
       { test: /\.(s*)css$/, use:['style-loader','css-loader', 'sass-loader'] },
@@ -65,24 +77,37 @@ module.exports = {
       { test: /\.woff2(\?.+)?$/, use: 'url-loader?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf(\?.+)?$/, use: 'file-loader' },
       { test: /\.eot(\?.+)?$/, use: 'file-loader' },
-      { test: /\.(svg|ico)(\?.+)?$/, use: 'file-loader' },
-      { test: /\.png$/, use: 'url-loader?mimetype=image/png' },
-      { test: /\.gif$/, use: 'url-loader?mimetype=image/gif' },
+      { test: /\.svg(\?.+)?$/, loader: 'svg-url-loader', options: { limit: 10 * 1024, noquotes: true } },
+      { test: /\.ico(\?.+)?$/, use: 'file-loader' },
+      { test: /\.png$/, loader: 'url-loader?mimetype=image/png', options: { limit: 10 * 1024, } },
+      { test: /\.gif$/, loader: 'url-loader?mimetype=image/gif', options: { limit: 10 * 1024, } },     
     ]
   },
   // externals: { "react": "React", "react-dom": "ReactDOM" },
   plugins: [
-    new CleanWebpackPlugin([PATHS.public]),
+    new CleanWebpackPlugin([PATHS.build]),
     new CopyWebpackPlugin([ 
-      { from: PATHS.static, to: PATHS.public, force: true }, 
+      { from: PATHS.srcStatic, to: PATHS.build, force: true }, 
     ]),
     new WriteFileWebpackPlugin(),
+    new WebpackMd5Hash(),
+    new HardSourceWebpackPlugin({
+      cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+      configHash: function(webpackConfig) {
+        return require('node-object-hash')({sort: false}).hash(webpackConfig);
+      },
+      environmentHash: {
+        root: process.cwd(),
+        directories: [],
+        files: ['yarn.lock'],
+      },
+    }),
     new HtmlWebPackPlugin({
       cache: true,
       filename: "index.html",
       hash: true,
       inject: 'body',
-      path: PATHS.public,
+      path: PATHS.build,
       showErrors: true,
       template: PATHS.indexHtml,
       minify: {
