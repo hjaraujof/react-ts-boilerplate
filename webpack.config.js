@@ -9,7 +9,7 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
 const webpack = require('webpack');
 
-const excludeVendors = ['react-scripts-ts','normalize.css'];
+const excludeVendors = ['normalize.css'];
 const vendors = Object.keys(package.dependencies).filter( d => !excludeVendors.includes(d) );
 
 const PATHS = {
@@ -23,7 +23,6 @@ const PORTS = { dev: 3000 };
 
 module.exports = {
   context: __dirname,
-  mode: process.env.NODE_ENV,
   devServer: {
     compress: true,
     contentBase: PATHS.build,
@@ -92,7 +91,7 @@ module.exports = {
     new WriteFileWebpackPlugin(),
     new WebpackMd5Hash(),
     new HardSourceWebpackPlugin({
-      cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+      cacheDirectory: '../node_modules/.cache/hard-source/[confighash]',
       configHash: function(webpackConfig) {
         return require('node-object-hash')({sort: false}).hash(webpackConfig);
       },
@@ -119,7 +118,6 @@ module.exports = {
       },
     }),
     new WebpackManifestPlugin({
-      // always dump manifest
       writeToFileEmit: true,
       seed:{
         "short_name": "HaroldApp",
