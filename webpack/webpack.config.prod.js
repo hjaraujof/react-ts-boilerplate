@@ -1,4 +1,5 @@
-const { PATHS, ports, vendors } = require('constants');
+const constants = require('./constants');
+const PATHS = constants.paths, vendors = constants.vendors, ports = constants.ports;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -48,21 +49,7 @@ module.exports = {
           reportFiles: [ "src/**/*.{ts,tsx}" ]
         } 
       },
-      { test: /\.(s*)css$/, 
-        use:[
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              camelCase: 'dashes',
-              minimize: true
-            }
-          },
-          { loader: 'resolve-url-loader' },
-          { loader: 'sass-loader' }
-        ] 
-      },
+      { test: /\.(s*)css$/, use:['style-loader','css-loader', 'sass-loader'] },
       { enforce: 'pre', test: /\.(jpe?g|png|gif|svg)$/, loader: 'image-webpack-loader'},
       { test: /.html$/, use: 'raw-loader' },
       { test: /\.json$/, use: 'json-loader' },
@@ -78,12 +65,12 @@ module.exports = {
   },
   // externals: { "react": "React", "react-dom": "ReactDOM" },
   plugins: [
-    new CleanWebpackPlugin([PATHS.build]),
+    new CleanWebpackPlugin(['build'], { root: PATHS.root }),
     new CopyWebpackPlugin([ 
       { from: PATHS.srcStatic, to: PATHS.build, force: true }, 
     ]),
     new WebpackMd5Hash(),
-    new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
+    // new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
     new HardSourceWebpackPlugin({
       cacheDirectory: '../node_modules/.cache/hard-source/[confighash]',
       configHash: function(webpackConfig) {

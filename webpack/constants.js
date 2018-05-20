@@ -3,7 +3,6 @@ const path = require('path');
 const basePath = __dirname;
 const src = path.join( basePath, "../src" );
 const dependencies = package.dependencies;
-console.log(basePath,src);
 
 module.exports = {
   vendors: (excluded) => Object.keys(dependencies).filter( d => !excluded.includes(d) ),

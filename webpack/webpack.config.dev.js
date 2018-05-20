@@ -84,7 +84,7 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new CleanWebpackPlugin(['build']),
+    new CleanWebpackPlugin(['build'], { root: PATHS.root }),
     new CopyWebpackPlugin([ 
       { from: PATHS.srcStatic, to: PATHS.build, force: true }, 
     ]),
