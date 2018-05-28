@@ -1,4 +1,6 @@
-import * as React from 'react';
+// tslint:disable:import-name
+// tslint:disable:variable-name
+import React from 'react';
 import { Section } from '../_shared/HTML-Components';
 
 import { IHTMLBasicProps } from '../_interfaces/IHTMLBasic';
@@ -11,5 +13,5 @@ export const Contact: React.SFC<IHTMLBasicProps> = (props) => {
 			  contact
       </Section>
 		</div>
-	);
-}
+  );
+};

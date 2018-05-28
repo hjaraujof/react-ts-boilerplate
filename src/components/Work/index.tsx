@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Section } from '../_shared/HTML-Components';
 
 import { IHTMLBasicProps } from '../_interfaces/IHTMLBasic';

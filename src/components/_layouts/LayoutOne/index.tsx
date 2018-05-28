@@ -1,4 +1,6 @@
-import * as React from 'react';
+// tslint:disable:import-name
+// tslint:disable:variable-name
+import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { About } from '../../About';
@@ -11,7 +13,6 @@ import { RightNavBar } from '../../_shared/RightNavBar';
 
 import './styles.css';
 
-// tslint:disable-next-line:variable-name
 export const LayoutOne: React.SFC<{}> = (props) => {
   const routes = [
 		{ name:'Home',route:'/#home' }, 

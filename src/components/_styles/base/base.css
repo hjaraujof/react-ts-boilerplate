@@ -8,6 +8,9 @@ body {
   font-size: 1.6rem;
   color: black;
   margin: 8px;
+  letter-spacing: 1px;
+	-webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .pageHeader{
   z-index: 10000000000000;

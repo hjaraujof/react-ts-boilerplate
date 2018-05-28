@@ -4,16 +4,16 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
-const webpack = require('webpack');
-const excludeVendors = ['normalize.css']
-const vendorsArray = vendors(excludeVendors);
+const excludedVendors = ['normalize.css','react-router-hash-link']
+// const vendorsArray = vendors(excludedVendors);
 
 module.exports = {
   context: PATHS.root,
-  entry:{ main: PATHS.indexJs, vendor: vendorsArray },
+  entry:{ main: PATHS.indexJs, vendor: excludedVendors },
   output: {
     filename: "[name].js",
 		chunkFilename: "[name].js",
@@ -46,9 +46,7 @@ module.exports = {
           useCache: true,
           errorsAsWarnings: true,
           forceIsolatedModules: true,
-          reportFiles: [
-            "src/**/*.{ts,tsx}",
-          ]
+          reportFiles: [ "src/**/*.{ts,tsx}" ]
         } 
       },
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
@@ -88,14 +86,30 @@ module.exports = {
     new CopyWebpackPlugin([ 
       { from: PATHS.srcStatic, to: PATHS.build, force: true }, 
     ]),
+    new HardSourceWebpackPlugin({
+      cacheDirectory: '../node_modules/.cache/hard-source/[confighash]',
+      configHash: function(webpackConfig) {
+        return require('node-object-hash')({sort: false}).hash(webpackConfig);
+      },
+      environmentHash: {
+        root: process.cwd(),
+        directories: [],
+        files: ['yarn.lock'],
+      },
+    }),
     new HtmlWebPackPlugin({
+      meta: [
+        { name: 'robots', content: 'index,follow' },
+        { name: 'description', content: 'Harold Araujo - Web Developer' },
+        { name: 'keywords',  content: 'harold-araujo,web-developer,react,angular,nodejs,javascript,webpack-4' }
+      ],
       cache: true,
       filename: "index.html",
       hash: true,
       inject: 'body',
       path: PATHS.build,
       showErrors: true,
-      template: PATHS.indexHtml,
+      template: PATHS.indexHtmlDev,
       minify: {
           collapseWhitespace: true,
           conservativeCollapse: true,
@@ -107,7 +121,7 @@ module.exports = {
     new WebpackManifestPlugin({
       writeToFileEmit: true,
       seed:{
-        "short_name": "HaroldApp",
+        "short_name": "HaroldAraujo",
         "name": "HaroldAraujoWebsite",
         "icons": [
           {

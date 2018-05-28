@@ -5,16 +5,18 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
-const excludeVendors = ['normalize.css']
-const vendorsArray = vendors(excludeVendors);
+const excludedVendors = ['normalize.css','react-router-hash-link'];
+// const vendorsArray = vendors(excludedVendors);
 
 module.exports = {
   context: PATHS.root,
-  entry:{ main: PATHS.indexJs, vendor: vendorsArray },
+  entry:{ main: PATHS.indexJs, vendor: [excludedVendors] },
   output: {
     filename: "[name].[chunkhash].js",
 		chunkFilename: "[name].[chunkhash].js",
@@ -31,9 +33,27 @@ module.exports = {
           name: 'vendor',
           enforce: true,
           chunks: 'all'
+        },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
         }
       }
+    },
+    minimizer: [  
+      new UglifyJsPlugin({  
+        parallel: true,  
+        cache: true,  
+        uglifyOptions: {  
+          compress: {  
+            drop_console: true  
     }
+  },
+      }),
+      new OptimizeCSSAssetsPlugin({}) 
+    ],
   },
   resolve: { "extensions": [ '.ts', '.tsx', '.js', '.json' ] },
   module:{
@@ -49,7 +69,7 @@ module.exports = {
           reportFiles: [ "src/**/*.{ts,tsx}" ]
         } 
       },
-      { test: /\.(s*)css$/, use:['style-loader','css-loader', 'sass-loader'] },
+      { test: /\.(s*)css$/, use:[MiniCssExtractPlugin.loader,'css-loader', 'sass-loader'] },
       { enforce: 'pre', test: /\.(jpe?g|png|gif|svg)$/, loader: 'image-webpack-loader'},
       { test: /.html$/, use: 'raw-loader' },
       { test: /\.json$/, use: 'json-loader' },
@@ -63,14 +83,19 @@ module.exports = {
       { test: /\.gif$/, loader: 'url-loader?mimetype=image/gif', options: { limit: 10 * 1024, } },     
     ]
   },
-  // externals: { "react": "React", "react-dom": "ReactDOM" },
+  // externals: { 
+  //   "react": "React",
+  //   "react-dom": "ReactDOM",
+  //   "react-router-dom":"react-router-dom",
+  //   "react-transition-group":"react-transition-group",
+  //   "styled-components":"styled-components"
+  // },
   plugins: [
     new CleanWebpackPlugin(['build'], { root: PATHS.root }),
     new CopyWebpackPlugin([ 
       { from: PATHS.srcStatic, to: PATHS.build, force: true }, 
     ]),
     new WebpackMd5Hash(),
-    // new MiniCssExtractPlugin({ filename: '[name].[chunkhash].css' }),
     new HardSourceWebpackPlugin({
       cacheDirectory: '../node_modules/.cache/hard-source/[confighash]',
       configHash: function(webpackConfig) {
@@ -94,7 +119,7 @@ module.exports = {
       inject: 'body',
       path: PATHS.build,
       showErrors: true,
-      template: PATHS.indexHtml,
+      template: PATHS.indexHtmlProd,
       minify: {
         collapseWhitespace: true,
         conservativeCollapse: true,
@@ -102,6 +127,10 @@ module.exports = {
         useShortDoctype: true,
         html5: true
       },
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[id].[contenthash].css"
     }),
     new WebpackManifestPlugin({
       seed:{
@@ -119,14 +148,6 @@ module.exports = {
         "theme_color": "#000000",
         "background_color": "#ffffff"
       }
-    }),  
-    /*new CssBlocksPlugin({
-      name: "css-blocks",
-      outputCssFile: "my-output-file.css",
-      analyzer: analyzerInstance,
-      compilationOptions: cssBlocksCompilationOptions,
-      optimization: opticssOptimizationOptions
-    }),*/
+    }),
   ],
-
 };

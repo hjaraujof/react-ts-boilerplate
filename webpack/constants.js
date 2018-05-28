@@ -12,7 +12,8 @@ module.exports = {
     src: src,
     srcStatic: path.join( basePath, "../assets/static" ),
     indexJs : path.join( src, "index.tsx" ),
-    indexHtml : path.join( src, "index.html" )
+    indexHtmlProd : path.join( src, "index.prod.html" ),
+    indexHtmlDev : path.join( src, "index.dev.html" )
   },
   ports:{ dev: 3000 }
 }

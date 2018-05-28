@@ -1,11 +1,13 @@
-import * as React from 'react';
+// tslint:disable:import-name
+// tslint:disable:variable-name
+import React from 'react';
 import { Section } from '../_shared/HTML-Components';
 
 import { IHTMLBasicProps } from '../_interfaces/IHTMLBasic';
 // import './About.css';
 
 export const About: React.SFC<IHTMLBasicProps> = (props) => {
-	return (
+  return (
 		<div className="App-about">
       <Section id={props.id} classes={props.classes} >
           <header><h1>Embedded content</h1></header>
@@ -14,9 +16,11 @@ export const About: React.SFC<IHTMLBasicProps> = (props) => {
             <div>
               <h3>No <code>&lt;figure&gt;</code> element</h3>
               <p><img src="http://placekitten.com/480/480" alt="Image alt text"/></p>
-              <h3>Wrapped in a <code>&lt;figure&gt;</code> element, no <code>&lt;figcaption&gt;</code></h3>
+              <h3>Wrapped in a 
+                <code>&lt;figure&gt;</code> element, no <code>&lt;figcaption&gt;</code></h3>
               <figure><img src="http://placekitten.com/420/420" alt="Image alt text"/></figure>
-              <h3>Wrapped in a <code>&lt;figure&gt;</code> element, with a <code>&lt;figcaption&gt;</code></h3>
+              <h3>Wrapped in a 
+                <code>&lt;figure&gt;</code> element, with a <code>&lt;figcaption&gt;</code></h3>
               <figure>
                 <img src="http://placekitten.com/420/420" alt="Image alt text"/>
                 <figcaption>Here is a caption for this image.</figcaption>
@@ -51,7 +55,9 @@ export const About: React.SFC<IHTMLBasicProps> = (props) => {
           </article>
           <article id="embedded__svg">
             <header><h2>Inline SVG</h2></header>
-            <div><svg width="100px" height="100px"><circle cx="100" cy="100" r="100" fill="#1fa3ec"/></svg></div>
+            <div><svg width="100px" height="100px">
+              <circle cx="100" cy="100" r="100" fill="#1fa3ec"/>
+            </svg></div>
             <footer><p><a href="#top">[Top]</a></p></footer>
           </article>
           <article id="embedded__iframe">
@@ -61,5 +67,5 @@ export const About: React.SFC<IHTMLBasicProps> = (props) => {
           </article>
         </Section>
 		</div>
-	);
-}
+  );
+};
