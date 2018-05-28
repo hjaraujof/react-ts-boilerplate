@@ -16,7 +16,7 @@ const PATHS = constants.paths, vendors = constants.vendors,
 
 module.exports = {
   context: PATHS.root,
-  entry:{ main: PATHS.indexJs, vendor: [excludedVendors] },
+  entry:{ main: PATHS.indexJs, vendor: excludedVendors },
   output: {
     filename: "[name].[chunkhash].js",
 		chunkFilename: "[name].[chunkhash].js",
