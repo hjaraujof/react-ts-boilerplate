@@ -15,5 +15,6 @@ module.exports = {
     indexHtmlProd : path.join( src, "index.prod.html" ),
     indexHtmlDev : path.join( src, "index.dev.html" )
   },
-  ports:{ dev: 3000 }
+  ports:{ dev: 3000 },
+  excludedVendors: ['normalize.css','react-router-hash-link','styled-components']
 }

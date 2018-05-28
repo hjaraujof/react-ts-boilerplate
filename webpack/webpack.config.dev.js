@@ -1,5 +1,3 @@
-const constants = require('./constants');
-const PATHS = constants.paths, vendors = constants.vendors, ports = constants.ports;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -8,7 +6,9 @@ const webpack = require('webpack');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
-const excludedVendors = ['normalize.css','react-router-hash-link']
+const constants = require('./constants');
+const PATHS = constants.paths, vendors = constants.vendors, 
+              ports = constants.ports, excludedVendors = constants.excludedVendors;
 // const vendorsArray = vendors(excludedVendors);
 
 module.exports = {
@@ -68,8 +68,7 @@ module.exports = {
     publicPath: 'http://localhost:'+ports.dev,
     compress: true,
     headers: {
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY'
+      'X-Content-Type-Options': 'nosniff'
     },
     hot: true,
     contentBase: PATHS.build,

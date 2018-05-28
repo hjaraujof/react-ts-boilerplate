@@ -1,5 +1,3 @@
-const constants = require('./constants');
-const PATHS = constants.paths, vendors = constants.vendors, ports = constants.ports;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -11,7 +9,9 @@ const webpack = require('webpack');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
-const excludedVendors = ['normalize.css','react-router-hash-link'];
+const constants = require('./constants');
+const PATHS = constants.paths, vendors = constants.vendors, 
+              ports = constants.ports, excludedVendors = constants.excludedVendors;
 // const vendorsArray = vendors(excludedVendors);
 
 module.exports = {
@@ -87,8 +87,7 @@ module.exports = {
   //   "react": "React",
   //   "react-dom": "ReactDOM",
   //   "react-router-dom":"react-router-dom",
-  //   "react-transition-group":"react-transition-group",
-  //   "styled-components":"styled-components"
+  //   "react-transition-group":"react-transition-group"
   // },
   plugins: [
     new CleanWebpackPlugin(['build'], { root: PATHS.root }),
